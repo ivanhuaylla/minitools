@@ -28,7 +28,7 @@ namespace Riga.LimpiarNulos
             {
                 boton.AvailabilityClassName = typeof(Comun.ConDocumento).FullName;
                 try {
-                    var uri = new Uri("pack://application:,,,/LimpiarNulos;component/icono_nulos.png");
+                    var uri = new Uri("pack://application:,,,/LimpiarNulos;component/icono_nulos.png", UriKind.Absolute);
                     boton.LargeImage = new BitmapImage(uri);
                     boton.Image = new BitmapImage(uri);
                 } catch { }
