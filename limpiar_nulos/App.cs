@@ -30,6 +30,29 @@ namespace Riga.LimpiarNulos
                 boton.Image = Comun.Iconos.Escoba(16);
             }
 
+            try
+            {
+                string dllInyector = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(dll), "InyectorDatos.dll");
+                var datosInyector = new PushButtonData(
+                    "InyectarDatos", "Inyectar\ndatos", dllInyector, "Riga.InyectorDatos.Comandos.DataInjectorCommand")
+                {
+                    ToolTip = "Inyecta datos desde un archivo CSV a parámetros de elementos en Revit.",
+                    LongDescription =
+                        "Abre una ventana para seleccionar un archivo CSV y mapear sus columnas a parámetros de Revit. " +
+                        "Inyecta los datos de acuerdo a la clave primaria seleccionada."
+                };
+
+                var botonInyector = panel.AddItem(datosInyector) as PushButton;
+                if (botonInyector != null)
+                {
+                    botonInyector.LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/InyectorDatos;component/Resources/icon_injector.jpg", UriKind.Absolute));
+                }
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("Debug Ribbon Error", ex.ToString());
+            }
+
             return Result.Succeeded;
         }
 
