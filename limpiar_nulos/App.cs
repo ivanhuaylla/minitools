@@ -11,7 +11,14 @@ namespace Riga.LimpiarNulos
         public Result OnStartup(UIControlledApplication app)
         {
             try { app.CreateRibbonTab(TAB); } catch { }
-            var panel = app.CreateRibbonPanel(TAB, "Parámetros");
+
+            RibbonPanel panel = null;
+            foreach (var p in app.GetRibbonPanels(TAB))
+            {
+                if (p.Name == "Parámetros") { panel = p; break; }
+            }
+            if (panel == null) panel = app.CreateRibbonPanel(TAB, "Parámetros");
+
             string dll = Assembly.GetExecutingAssembly().Location;
 
             var datos = new PushButtonData(
@@ -49,6 +56,23 @@ namespace Riga.LimpiarNulos
                     System.Reflection.Assembly.LoadFrom(dllInyector);
                     botonInyector.LargeImage = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/InyectorDatos;component/Resources/icon_injector.jpg", UriKind.Absolute));
                 }
+
+                string dllConcatenador = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(dll), "ConcatenadorParametros.dll");
+                var datosConcatenador = new PushButtonData(
+                    "ConcatenadorParametros", "Concatenador\nde Parámetros", dllConcatenador, "Riga.ConcatenadorParametros.Comandos.CmdConcatenadorParametros")
+                {
+                    ToolTip = "Concatena múltiples parámetros en un parámetro de destino.",
+                    LongDescription = "Permite seleccionar elementos o filtrar por categoría para unir los valores de varios parámetros en un único parámetro destino, usando un separador personalizado."
+                };
+
+                var botonConcatenador = panel.AddItem(datosConcatenador) as PushButton;
+                if (botonConcatenador != null)
+                {
+                    System.Reflection.Assembly.LoadFrom(dllConcatenador);
+                    botonConcatenador.AvailabilityClassName = typeof(Comun.ConDocumento).FullName;
+                    botonConcatenador.LargeImage = CuadradoNegro(32);
+                    botonConcatenador.Image = CuadradoNegro(16);
+                }
             }
             catch (Exception ex)
             {
@@ -56,6 +80,26 @@ namespace Riga.LimpiarNulos
             }
 
             return Result.Succeeded;
+        }
+
+        static System.Windows.Media.ImageSource CuadradoNegro(int lado)
+        {
+            try
+            {
+                var visual = new System.Windows.Media.DrawingVisual();
+                using (var dc = visual.RenderOpen())
+                {
+                    var brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x18, 0x1C, 0x20));
+                    brush.Freeze();
+                    dc.DrawRectangle(brush, null, new System.Windows.Rect(0, 0, lado, lado));
+                }
+
+                var bmp = new System.Windows.Media.Imaging.RenderTargetBitmap(lado, lado, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+                bmp.Render(visual);
+                bmp.Freeze();
+                return bmp;
+            }
+            catch { return null; }
         }
 
         public Result OnShutdown(UIControlledApplication app)

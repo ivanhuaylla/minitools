@@ -80,7 +80,6 @@
     <EmbeddedResource Include="..\concatenador_parametros\bin\Release\ConcatenadorParametros.dll"                LogicalName="paquete/ConcatenadorParametros.dll" />
     <EmbeddedResource Include="..\concatenador_parametros\bin\Release\ConcatenadorParametros.deps.json"          LogicalName="paquete/ConcatenadorParametros.deps.json" />
     <EmbeddedResource Include="..\concatenador_parametros\bin\Release\ConcatenadorParametros.runtimeconfig.json" LogicalName="paquete/ConcatenadorParametros.runtimeconfig.json" />
-    <EmbeddedResource Include="..\concatenador_parametros\bin\Release\ConcatenadorParametros.addin"              LogicalName="paquete/ConcatenadorParametros.addin" />
   </ItemGroup>
 
 </Project>

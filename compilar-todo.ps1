@@ -64,6 +64,9 @@ foreach ($p in $proyectos) {
     foreach ($ext in '*.dll', '*.deps.json', '*.runtimeconfig.json', '*.addin') {
         foreach ($f in (Get-ChildItem (Join-Path $bin $ext) -ErrorAction SilentlyContinue)) {
             if ($f.Name -like '*.bloqueada.*') { continue }
+            if ($f.Name -like 'RevitAPI*.dll') { continue }
+            if ($f.Name -like 'AdWindows.dll') { continue }
+            if ($f.Name -like 'UIFramework*.dll') { continue }
             Copy-Item $f.FullName (Join-Path $addins $f.Name) -Force
             $copiados++
         }

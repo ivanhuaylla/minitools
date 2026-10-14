@@ -56,6 +56,7 @@ $viejos = @(
     'RigaPublicador.runtimeconfig.json', 'RigaPublicador.addin',
     'RigaSectores.dll', 'RigaSectores.deps.json',
     'RigaSectores.runtimeconfig.json', 'RigaSectores.addin',
+    'ConcatenadorParametros.addin',
     'InstalarHerramientas.log'
 )
 
@@ -129,6 +130,9 @@ try {
         Copy-Item $f.FullName (Join-Path $destino $f.Name) -Force
         Anotar ('  copiado  ' + $f.Name)
     }
+
+    # Desbloquear archivos para evitar bloqueos por MotW
+    Get-ChildItem -Path $destino -Recurse | Unblock-File -ErrorAction SilentlyContinue
 
     Anotar ''
     Anotar ('Listo: ' + $archivos.Count + ' archivos en ' + $destino)

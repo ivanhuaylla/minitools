@@ -28,7 +28,8 @@ namespace Riga.Instalador
             "RigaPublicador.dll", "RigaPublicador.deps.json",
             "RigaPublicador.runtimeconfig.json", "RigaPublicador.addin",
             "RigaSectores.dll", "RigaSectores.deps.json",
-            "RigaSectores.runtimeconfig.json", "RigaSectores.addin"
+            "RigaSectores.runtimeconfig.json", "RigaSectores.addin",
+            "ConcatenadorParametros.addin"
         };
 
         public static string Destino

@@ -20,54 +20,63 @@ namespace Riga.ConcatenadorParametros.Comandos
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            _uidoc = commandData.Application.ActiveUIDocument;
-            _doc = _uidoc.Document;
-
-            _vm = new ConcatenadorViewModel();
-            CargarCategoriasDisponibles();
-
-            bool keepRunning = true;
-
-            while (keepRunning)
+            try
             {
-                _vm.AccionActual = ConcatenadorViewModel.AccionVentana.Ninguna;
+                _uidoc = commandData.Application.ActiveUIDocument;
+                if (_uidoc == null || _uidoc.Document == null) return Result.Cancelled;
+                _doc = _uidoc.Document;
 
-                _window = new ConcatenadorWindow(_vm);
-                _window.ShowDialog();
+                _vm = new ConcatenadorViewModel();
+                CargarCategoriasDisponibles();
 
-                if (_vm.AccionActual == ConcatenadorViewModel.AccionVentana.Ninguna)
+                bool keepRunning = true;
+
+                while (keepRunning)
                 {
-                    // User closed the window with the X button
-                    keepRunning = false;
-                }
-                else if (_vm.AccionActual == ConcatenadorViewModel.AccionVentana.Seleccionar)
-                {
-                    try
+                    _vm.AccionActual = ConcatenadorViewModel.AccionVentana.Ninguna;
+
+                    _window = new ConcatenadorWindow(_vm);
+                    _window.ShowDialog();
+
+                    if (_vm.AccionActual == ConcatenadorViewModel.AccionVentana.Ninguna)
                     {
-                        var referencias = _uidoc.Selection.PickObjects(ObjectType.Element, "Seleccione elementos para concatenar parámetros (Esc para cancelar)");
-                        _elementosSeleccionados = referencias.Select(r => r.ElementId).ToList();
-                        ExtraerParametrosDeElementos(_elementosSeleccionados);
-                    }
-                    catch (Autodesk.Revit.Exceptions.OperationCanceledException)
-                    {
-                        // User pressed Esc. Do nothing, just let the loop continue and reopen the window.
-                    }
-                    catch (Exception ex)
-                    {
-                        TaskDialog.Show("Error", "Error en la selección: " + ex.Message);
-                    }
-                }
-                else if (_vm.AccionActual == ConcatenadorViewModel.AccionVentana.Ejecutar)
-                {
-                    bool success = EjecutarConcatenacion();
-                    if (success)
-                    {
+                        // User closed the window with the X button
                         keepRunning = false;
                     }
+                    else if (_vm.AccionActual == ConcatenadorViewModel.AccionVentana.Seleccionar)
+                    {
+                        try
+                        {
+                            var referencias = _uidoc.Selection.PickObjects(ObjectType.Element, "Seleccione elementos para concatenar parámetros (Esc para cancelar)");
+                            _elementosSeleccionados = referencias.Select(r => r.ElementId).ToList();
+                            ExtraerParametrosDeElementos(_elementosSeleccionados);
+                        }
+                        catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+                        {
+                            // User pressed Esc. Do nothing, just let the loop continue and reopen the window.
+                        }
+                        catch (Exception ex)
+                        {
+                            TaskDialog.Show("Error", "Error en la selección: " + ex.Message);
+                        }
+                    }
+                    else if (_vm.AccionActual == ConcatenadorViewModel.AccionVentana.Ejecutar)
+                    {
+                        bool success = EjecutarConcatenacion();
+                        if (success)
+                        {
+                            keepRunning = false;
+                        }
+                    }
                 }
-            }
 
-            return Result.Succeeded;
+                return Result.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("Error Crítico", ex.ToString());
+                return Result.Failed;
+            }
         }
 
         private void CargarCategoriasDisponibles()
