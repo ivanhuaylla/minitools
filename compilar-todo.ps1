@@ -29,6 +29,9 @@ param(
 $ErrorActionPreference = 'Stop'
 $raiz = Split-Path -Parent $MyInvocation.MyCommand.Path
 
+# Desbloquear archivos de origen para evitar propagacion de MotW a binarios
+Get-ChildItem -Path $raiz -Recurse | Unblock-File -ErrorAction SilentlyContinue
+
 $proyectos = @('sectores', 'vistas', 'guardado', 'exportar_planos', 'exportar_tablas', 'limpiar_nulos', 'inyector_datos', 'concatenador_parametros')
 
 foreach ($p in $proyectos) {

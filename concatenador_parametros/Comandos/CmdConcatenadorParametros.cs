@@ -83,8 +83,9 @@ namespace Riga.ConcatenadorParametros.Comandos
         {
             var categoriasId = ParameterFilterUtilities.GetAllFilterableCategories();
             var categorias = categoriasId.Select(id => Category.GetCategory(_doc, id))
-                                         .Where(c => c != null)
-                                         .OrderBy(c => c.Name)
+                                         .Where(c => c != null && !string.IsNullOrWhiteSpace(c.Name) && c.AllowsBoundParameters)
+                                         .Select(c => new CategoriaItem { Id = c.Id, Nombre = c.Name })
+                                         .OrderBy(c => c.Nombre)
                                          .ToList();
 
             foreach (var c in categorias)

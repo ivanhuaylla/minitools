@@ -18,15 +18,15 @@ namespace Riga.ConcatenadorParametros.UI
 
         public bool UsarCategoria => !_usarSeleccion;
 
-        private Category _categoriaSeleccionada;
-        public Category CategoriaSeleccionada
+        private CategoriaItem _categoriaSeleccionada;
+        public CategoriaItem CategoriaSeleccionada
         {
             get => _categoriaSeleccionada;
             set { _categoriaSeleccionada = value; OnPropertyChanged(); }
         }
 
-        private ObservableCollection<Category> _categorias = new ObservableCollection<Category>();
-        public ObservableCollection<Category> Categorias
+        private ObservableCollection<CategoriaItem> _categorias = new ObservableCollection<CategoriaItem>();
+        public ObservableCollection<CategoriaItem> Categorias
         {
             get => _categorias;
             set { _categorias = value; OnPropertyChanged(); }
@@ -113,6 +113,12 @@ namespace Riga.ConcatenadorParametros.UI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+    }
+
+    public class CategoriaItem
+    {
+        public ElementId Id { get; set; }
+        public string Nombre { get; set; }
     }
 
     public class ParametroItem : INotifyPropertyChanged

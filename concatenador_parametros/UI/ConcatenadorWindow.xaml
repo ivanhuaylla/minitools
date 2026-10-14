@@ -27,7 +27,7 @@
                              IsChecked="{Binding UsarCategoria}" Margin="0,0,0,5"/>
                 <ComboBox ItemsSource="{Binding Categorias}"
                           SelectedItem="{Binding CategoriaSeleccionada}"
-                          DisplayMemberPath="Name"
+                          DisplayMemberPath="Nombre"
                           IsEnabled="{Binding UsarCategoria}"
                           Margin="20,0,0,0"/>
             </StackPanel>
